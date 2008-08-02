@@ -1,6 +1,6 @@
 ##
 # KISS + Hunspell (Keep It Simple but no Simpler) 
-# => Hunspell binding in one file (thanks to RubyInline :)
+# => Hunspell binding in 50 lines (thanks to RubyInline :)
 #
 # Nguyen Tien Dung (dungtn@gmail.com)
 
@@ -47,6 +47,7 @@ class Hunspell
         for (iter=slst, i=0; i<n; iter++, i++) {
           rb_ary_push(suggestions, rb_str_new2(*iter));
         }
+
         // Free suggestion lists after use
         Hunspell_free_list(pHunspell, &slst, n);
         return suggestions;
