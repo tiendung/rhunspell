@@ -1,0 +1,20 @@
+INSTALL
+  Download and install Hunspell lib at http://hunspell.sourceforge.net/
+  Install RubyInline gem (sudo gem install RubyInline)
+  In your source code:
+    require "{PATH_TO}/hunspell"
+
+USAGE
+  dict = Hunspell.new("names.aff", "name.dic")
+
+  dict.spell("acetech") # => true
+  dict.spell("abcxyz")  # => false
+
+	dict.suggest("azetach") # => "acetech"  
+
+REFERENCES
+  Hunspell programming interface: 
+    http://sourceforge.net/docman/display_doc.php?docid=115683&group_id=143754
+
+  Hunspell gem: 
+    http://rubyforge.org/frs/?group_id=4396
