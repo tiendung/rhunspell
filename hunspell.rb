@@ -11,15 +11,14 @@ class Hunspell
   inline do |builder|
     builder.add_link_flags("-lhunspell-1.2")
     
-    builder.prefix <<-EOC
+    builder.prefix <<-HUNSPELL_H
       typedef struct Hunhandle Hunhandle;
       Hunhandle *Hunspell_create(const char * affpath, const char * dpath);
       void Hunspell_destroy(Hunhandle *pHunspell);
 
       int Hunspell_spell(Hunhandle *pHunspell, const char *);
       int Hunspell_suggest(Hunhandle *pHunspell, char*** slst, const char * word);
-      void Hunspell_free_list(Hunhandle *pHunspell, char *** slst, int n);
-    EOC
+    HUNSPELL_H
     
     builder.c_singleton <<-EOC
       VALUE new(const char* affpath, const char* dpath) {
@@ -45,8 +44,8 @@ class Hunspell
 
     builder.c <<-EOC
       VALUE suggest(const char* str) {
-        int n;
-        char **list, **iter, **listEnd;
+        int i, n;
+        char **list, *item;
         VALUE suggestions;
 
         Hunhandle *pHunspell;
@@ -55,11 +54,13 @@ class Hunspell
         n = Hunspell_suggest(pHunspell, &list, str);
         suggestions = rb_ary_new2(n);
         
-        for (iter=list, listEnd=list + n; iter < listEnd; iter++) {
-          rb_ary_push(suggestions, rb_str_new2(*iter));
+        for (i = 0; i < n; i++) {
+          item = *(list + i);
+          rb_ary_push(suggestions, rb_str_new2(item));
+          free(item);
         }
+        free(list);
 
-        Hunspell_free_list(pHunspell, &list, n);
         return suggestions;
       }
     EOC
