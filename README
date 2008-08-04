@@ -7,8 +7,8 @@ INSTALL
 USAGE
   dict = Hunspell.new("names.aff", "name.dic")
 
-  dict.spell("acetech") # => true
-  dict.spell("abcxyz")  # => false
+  dict.check("acetech") # => true
+  dict.check("abcxyz")  # => false
 
 	dict.suggest("azetach") # => "acetech"  
 

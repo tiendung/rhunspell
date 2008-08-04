@@ -1,6 +1,6 @@
 ##
 # KISS + Hunspell (Keep It Simple but no Simpler) 
-# => Hunspell binding in 50 lines (thanks to RubyInline :)
+# => Hunspell binding within 60 lines (thanks to RubyInline :)
 #
 # Nguyen Tien Dung (dungtn@gmail.com)
 
@@ -11,45 +11,53 @@ class Hunspell
   inline do |builder|
     builder.add_link_flags("-lhunspell-1.2")
     
-    builder.prefix <<-HUNSPELL_H
+    builder.prefix <<-EOC
       typedef struct Hunhandle Hunhandle;
       Hunhandle *Hunspell_create(const char * affpath, const char * dpath);
+      void Hunspell_destroy(Hunhandle *pHunspell);
+
       int Hunspell_spell(Hunhandle *pHunspell, const char *);
       int Hunspell_suggest(Hunhandle *pHunspell, char*** slst, const char * word);
       void Hunspell_free_list(Hunhandle *pHunspell, char *** slst, int n);
-
-      Hunhandle *pHunspell;
-    HUNSPELL_H
-
-    builder.c <<-EOC
-      void initialize(const char* affpath, const char* dpath) {
+    EOC
+    
+    builder.c_singleton <<-EOC
+      VALUE new(const char* affpath, const char* dpath) {
+        Hunhandle *pHunspell;
         pHunspell = Hunspell_create(affpath, dpath);
         if (!pHunspell) {
           rb_raise(rb_eRuntimeError, "Failed to initialize Hunspell.");
         }    
+        return Data_Wrap_Struct(self, 0, Hunspell_destroy, pHunspell);
       }
     EOC
 
     builder.c <<-EOC
-      VALUE spell(const char* str) {
+      VALUE check(const char* str) {
+        Hunhandle *pHunspell;
+        Data_Get_Struct(self, Hunhandle, pHunspell);
+
         return (Hunspell_spell(pHunspell, str) == 1 ? Qtrue : Qfalse);
       }
     EOC
 
     builder.c <<-EOC
       VALUE suggest(const char* str) {
-        int n, i;
-        char **slst, **iter;
+        int n;
+        char **list, **iter, **listEnd;
         VALUE suggestions;
+
+        Hunhandle *pHunspell;
+        Data_Get_Struct(self, Hunhandle, pHunspell);
         
-        n = Hunspell_suggest(pHunspell, &slst, str);
+        n = Hunspell_suggest(pHunspell, &list, str);
         suggestions = rb_ary_new2(n);
-        for (iter=slst, i=0; i<n; iter++, i++) {
+        
+        for (iter=list, listEnd=list + n; iter < listEnd; iter++) {
           rb_ary_push(suggestions, rb_str_new2(*iter));
         }
 
-        // Free suggestion lists after use
-        Hunspell_free_list(pHunspell, &slst, n);
+        Hunspell_free_list(pHunspell, &list, n);
         return suggestions;
       }
     EOC
