@@ -55,11 +55,11 @@ class Hunspell
         suggestions = rb_ary_new2(n);
         
         for (i = 0; i < n; i++) {
-          item = *(list + i);
+          item = list[i];
           rb_ary_push(suggestions, rb_str_new2(item));
           free(item);
         }
-        free(list);
+        if (n > 0) { free(list); }
 
         return suggestions;
       }
