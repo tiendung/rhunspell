@@ -25,9 +25,11 @@ class Hunspell
       VALUE new(const char* affpath, const char* dpath) {
         Hunhandle *pHunspell;
         pHunspell = Hunspell_create(affpath, dpath);
+
         if (!pHunspell) {
           rb_raise(rb_eRuntimeError, "Failed to initialize Hunspell.");
         }    
+
         return Data_Wrap_Struct(self, 0, Hunspell_destroy, pHunspell);
       }
     EOC
