@@ -5,7 +5,7 @@ INSTALL
     require "{PATH_TO}/hunspell"
 
 USAGE
-  dict = Hunspell.new("names.aff", "name.dic")
+  dict = Hunspell.new("names.aff", "names.dic")
 
   dict.check("acetech") # => true
   dict.check("abcxyz")  # => false
