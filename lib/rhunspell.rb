@@ -3,8 +3,9 @@ require 'inline'
 
 class Hunspell
   inline do |builder|
+    builder.add_link_flags("-L/usr/lib")
     builder.add_link_flags("-lhunspell-1.2")
-    
+
     builder.prefix <<-HUNSPELL_H
       typedef struct Hunhandle Hunhandle;
       Hunhandle *Hunspell_create  (const char *affpath, const char *dicpath);
@@ -12,7 +13,7 @@ class Hunspell
              int Hunspell_spell   (Hunhandle *pHunspell, const char *word);
              int Hunspell_suggest (Hunhandle *pHunspell, char ***slst, const char *word);
     HUNSPELL_H
-    
+
     builder.prefix <<-GET_HUNHANDLE
       static Hunhandle *get_hunhandle(VALUE klass) {
         Hunhandle *pHunspell;
@@ -23,7 +24,7 @@ class Hunspell
         return pHunspell;
       }
     GET_HUNHANDLE
-    
+
     builder.c_singleton <<-HUNSPELL_NEW
       VALUE new(const char* affpath, const char* dicpath) {
         Hunhandle *pHunspell = Hunspell_create(affpath, dicpath);
@@ -48,7 +49,7 @@ class Hunspell
 
         n = Hunspell_suggest(get_hunhandle(self), &list, word);
         suggestions = rb_ary_new2(n);
-        
+
         for (i = 0; i < n; ++i) {
           item = list[i];
           rb_ary_push(suggestions, rb_str_new2(item));
@@ -58,7 +59,7 @@ class Hunspell
         if (n > 0) {
           free(list); 
         }
-        
+
         return suggestions;
       }
     HUNSPELL_SUGGEST
