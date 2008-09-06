@@ -37,7 +37,8 @@ Simplest Ruby binding for Hunspell spelling checking library
 
 * sudo gem install RubyInline
 
-* sudo gem rhunspell
+* gem sources -a http://gems.github.com
+* sudo gem install tiendung-rhunspell
 
 == LICENSE:
 
