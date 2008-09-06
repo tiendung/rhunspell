@@ -1,6 +1,6 @@
 = rhunspell
 
-* http://rubyforge.org/projects/rhunspell/
+* http://github.com/tiendung/rhunspell
 
 == DESCRIPTION:
 
@@ -20,13 +20,22 @@ Simplest Ruby binding for Hunspell spelling checking library
 	dict.check("acetech") # => true
 	dict.check("abcxyz")  # => false
 
-	dict.suggest("azetach") # => "acetech"
+	dict.suggest("azetach") # => ["acetech"]
 
 == REQUIREMENTS:
 
 * RubyInline
 
 == INSTALL:
+* curl -O http://nchc.dl.sourceforge.net/sourceforge/hunspell/hunspell-1.2.7.tar.gz
+	tar -zxvf hunspell-1.2.7.tar.gz
+	cd hunspell-1.2.7
+	./configure
+	make
+	sudo make install
+
+
+* sudo gem install RubyInline
 
 * sudo gem rhunspell
 
