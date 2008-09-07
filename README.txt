@@ -1,6 +1,6 @@
 = rhunspell
 
-* http://github.com/tiendung/rhunspell
+* http://rhunspell.rubyforge.org/
 
 == DESCRIPTION:
 
@@ -38,7 +38,7 @@ Simplest Ruby binding for Hunspell spelling checking library
 * sudo gem install RubyInline
 
 * gem sources -a http://gems.github.com
-* sudo gem install tiendung-rhunspell
+* sudo gem install rhunspell
 
 == LICENSE:
 
